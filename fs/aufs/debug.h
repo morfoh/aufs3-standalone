@@ -37,6 +37,8 @@
 #include <linux/sysrq.h>
 #include <linux/aufs_type.h>
 
+#include <asm/system.h>
+
 #ifdef CONFIG_AUFS_DEBUG
 #define AuDebugOn(a)		BUG_ON(a)
 
