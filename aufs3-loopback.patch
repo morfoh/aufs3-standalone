@@ -1,35 +1,4 @@
-commit 8561df7c104a9ade6688d2ddd4110b7f89ab8c9b
-Author: J. R. Okajima <hooanon05@yahoo.co.jp>
-Date:   Tue Aug 2 21:36:22 2011 +0900
-
-    aufs lktr: tiny, forgot to remove
-    
-    It should be removed by the commit
-    	3622a2b 2011-04-08 aufs lktr: remove __ima_file_ro()
-    
-    Signed-off-by: J. R. Okajima <hooanon05@yahoo.co.jp>
-    (cherry picked from commit 1772a24e81188e40b204f36d5ec82f9e64270544)
-
-commit 08b33315cfdfc93b668f2e2308a23d54ce0a41c3
-Author: J. R. Okajima <hooanon05@yahoo.co.jp>
-Date:   Tue Jul 12 01:18:09 2011 +0900
-
-    for aufs, strict support for loopback mount in aufs
-    
-    Make loop_set_fd() and loop_change_fd() refer the real file instead of
-    the virtual aufs file.
-    Introduce static function loop_real_file() and s_op->real_loop().
-    
-    There is a side effect of this commit which moves the overlapping-check
-    from aufs to loopback block device.
-    
-    Cf. the commit
-    	8c0c4f7 2011-07-12 aufs: another support for loopback mount in aufs
-    in aufs2-2.6.git tree.
-    
-    Signed-off-by: J. R. Okajima <hooanon05@yahoo.co.jp>
-
-----------------------------------------
+aufs3.0 loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
 index 76c8da7..027b839 100644
@@ -214,10 +183,10 @@ index 76c8da7..027b839 100644
  }
  
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 8b725c2..e61305b 100644
+index d34f581..0965b5a 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
-@@ -327,7 +327,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
+@@ -322,7 +322,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
  
  	err = -EINVAL;
  	h_file = au_hf_top(file);
@@ -289,14 +258,15 @@ index 636e1da..40b992f 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index b5b9792..c948340 100644
+index b5b9792..dc57779 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1645,6 +1645,9 @@ struct super_operations {
+@@ -1645,6 +1645,10 @@ struct super_operations {
  	ssize_t (*quota_write)(struct super_block *, int, const char *, size_t, loff_t);
  #endif
  	int (*bdev_try_to_free_page)(struct super_block*, struct page*, gfp_t);
-+#ifdef CONFIG_BLK_DEV_LOOP /* and aufs */
++#if defined(CONFIG_BLK_DEV_LOOP) ||  defined(CONFIG_BLK_DEV_LOOP_MODULE)
++	/* and aufs */
 +	struct file *(*real_loop)(struct file *);
 +#endif
  };
