@@ -142,6 +142,15 @@ index e3569b0..9dc07b7 100644
  
  /**
   * splice_direct_to_actor - splices data directly between two non-pipes
+diff --git a/security/commoncap.c b/security/commoncap.c
+index a93b3b7..024282c 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -971,3 +971,4 @@ int cap_file_mmap(struct file *file, unsigned long reqprot,
+ 	}
+ 	return ret;
+ }
++EXPORT_SYMBOL(cap_file_mmap);
 diff --git a/security/device_cgroup.c b/security/device_cgroup.c
 index 4450fbe..2c437e5 100644
 --- a/security/device_cgroup.c
