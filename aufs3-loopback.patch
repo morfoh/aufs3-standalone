@@ -1,7 +1,7 @@
 aufs3.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 76c8da7..027b839 100644
+index 4720c7a..3a4b6c2 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -541,7 +541,7 @@ out:
@@ -110,7 +110,7 @@ index 76c8da7..027b839 100644
   out:
  	return error;
  }
-@@ -817,7 +839,7 @@ static void loop_sysfs_exit(struct loop_device *lo)
+@@ -810,7 +832,7 @@ static void loop_sysfs_exit(struct loop_device *lo)
  static int loop_set_fd(struct loop_device *lo, fmode_t mode,
  		       struct block_device *bdev, unsigned int arg)
  {
@@ -119,7 +119,7 @@ index 76c8da7..027b839 100644
  	struct inode	*inode;
  	struct address_space *mapping;
  	unsigned lo_blocksize;
-@@ -832,6 +854,12 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+@@ -825,6 +847,12 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
  	file = fget(arg);
  	if (!file)
  		goto out;
@@ -132,7 +132,7 @@ index 76c8da7..027b839 100644
  
  	error = -EBUSY;
  	if (lo->lo_state != Lo_unbound)
-@@ -892,6 +920,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+@@ -885,6 +913,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
  	lo->lo_device = bdev;
  	lo->lo_flags = lo_flags;
  	lo->lo_backing_file = file;
@@ -140,7 +140,7 @@ index 76c8da7..027b839 100644
  	lo->transfer = transfer_none;
  	lo->ioctl = NULL;
  	lo->lo_sizelimit = 0;
-@@ -935,6 +964,7 @@ out_clr:
+@@ -928,6 +957,7 @@ out_clr:
  	lo->lo_thread = NULL;
  	lo->lo_device = NULL;
  	lo->lo_backing_file = NULL;
@@ -148,7 +148,7 @@ index 76c8da7..027b839 100644
  	lo->lo_flags = 0;
  	set_capacity(lo->lo_disk, 0);
  	invalidate_bdev(bdev);
-@@ -944,6 +974,8 @@ out_clr:
+@@ -937,6 +967,8 @@ out_clr:
  	lo->lo_state = Lo_unbound;
   out_putf:
  	fput(file);
@@ -157,7 +157,7 @@ index 76c8da7..027b839 100644
   out:
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
-@@ -990,6 +1022,7 @@ loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
+@@ -983,6 +1015,7 @@ loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
  static int loop_clr_fd(struct loop_device *lo, struct block_device *bdev)
  {
  	struct file *filp = lo->lo_backing_file;
@@ -165,15 +165,15 @@ index 76c8da7..027b839 100644
  	gfp_t gfp = lo->old_gfp_mask;
  
  	if (lo->lo_state != Lo_bound)
-@@ -1008,6 +1041,7 @@ static int loop_clr_fd(struct loop_device *lo, struct block_device *bdev)
- 	kthread_stop(lo->lo_thread);
+@@ -1002,6 +1035,7 @@ static int loop_clr_fd(struct loop_device *lo, struct block_device *bdev)
  
+ 	spin_lock_irq(&lo->lo_lock);
  	lo->lo_backing_file = NULL;
 +	lo->lo_backing_virt_file = NULL;
+ 	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
- 	lo->transfer = NULL;
-@@ -1045,6 +1079,8 @@ static int loop_clr_fd(struct loop_device *lo, struct block_device *bdev)
+@@ -1040,6 +1074,8 @@ static int loop_clr_fd(struct loop_device *lo, struct block_device *bdev)
  	 * bd_mutex which is usually taken before lo_ctl_mutex.
  	 */
  	fput(filp);
@@ -183,7 +183,7 @@ index 76c8da7..027b839 100644
  }
  
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index f6e1dd3..5e15bb4 100644
+index 39e233b..111e35d 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
 @@ -322,7 +322,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
@@ -273,7 +273,7 @@ index 178cdb4..4a03fa2 100644
  
  /*
 diff --git a/include/linux/loop.h b/include/linux/loop.h
-index 66c194e..37dd916 100644
+index 683d698..572508f 100644
 --- a/include/linux/loop.h
 +++ b/include/linux/loop.h
 @@ -48,7 +48,7 @@ struct loop_device {
