@@ -14,7 +14,7 @@ index c322794..2aad244 100644
  
  /*
 diff --git a/fs/inode.c b/fs/inode.c
-index 73920d5..4aa4e03 100644
+index ec79246..46ac6f9 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -65,6 +65,7 @@ static struct hlist_head *inode_hashtable __read_mostly;
