@@ -16,7 +16,7 @@ index b1822dd..8b29ab7 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 25b6a88..47ed5d8 100644
+index 5afaa58..f99a9a4 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -220,6 +220,10 @@ static void show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -30,7 +30,7 @@ index 25b6a88..47ed5d8 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1001,6 +1005,8 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -1031,6 +1035,8 @@ static int show_numa_map(struct seq_file *m, void *v)
  
  	if (file) {
  		seq_printf(m, " file=");

@@ -26,10 +26,10 @@ index ec79246..46ac6f9 100644
  /*
   * Empty aops. Can be used for the cases where the user does not
 diff --git a/fs/namei.c b/fs/namei.c
-index 8a8c842..bf44a8d 100644
+index 8edad02..50e8718 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1758,6 +1758,7 @@ struct dentry *lookup_hash(struct nameidata *nd)
+@@ -1752,6 +1752,7 @@ struct dentry *lookup_hash(struct nameidata *nd)
  {
  	return __lookup_hash(&nd->last, nd->path.dentry, nd);
  }
@@ -38,7 +38,7 @@ index 8a8c842..bf44a8d 100644
  /**
   * lookup_one_len - filesystem helper to lookup single pathname component
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 22bfe82..e2413f2 100644
+index b4febb2..598a308 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1508,6 +1508,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
