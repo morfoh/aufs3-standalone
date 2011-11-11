@@ -14,7 +14,7 @@ index c322794..2aad244 100644
  
  /*
 diff --git a/fs/inode.c b/fs/inode.c
-index ecbb68d..a9c16a9 100644
+index ee4e66b..728042b 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -65,6 +65,7 @@ static struct hlist_head *inode_hashtable __read_mostly;
@@ -26,10 +26,10 @@ index ecbb68d..a9c16a9 100644
  /*
   * Empty aops. Can be used for the cases where the user does not
 diff --git a/fs/namei.c b/fs/namei.c
-index 1c48cce..0589eb3 100644
+index f72b667..7a58222 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1752,6 +1752,7 @@ struct dentry *lookup_hash(struct nameidata *nd)
+@@ -1754,6 +1754,7 @@ struct dentry *lookup_hash(struct nameidata *nd)
  {
  	return __lookup_hash(&nd->last, nd->path.dentry, nd);
  }

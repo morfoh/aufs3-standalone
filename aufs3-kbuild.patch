@@ -1,7 +1,7 @@
 aufs3.x-rcN kbuild patch
 
 diff --git a/fs/Kconfig b/fs/Kconfig
-index 9fe0b34..c4311f8 100644
+index 5f4c45d..357a8a6 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
 @@ -215,6 +215,7 @@ source "fs/pstore/Kconfig"

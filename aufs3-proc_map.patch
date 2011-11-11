@@ -16,10 +16,10 @@ index b1822dd..8b29ab7 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 5afaa58..f99a9a4 100644
+index e418c5a..53efe92 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -220,6 +220,10 @@ static void show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
+@@ -222,6 +222,10 @@ static void show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
  
  	if (file) {
  		struct inode *inode = vma->vm_file->f_path.dentry->d_inode;
@@ -30,7 +30,7 @@ index 5afaa58..f99a9a4 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1031,6 +1035,8 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -1033,6 +1037,8 @@ static int show_numa_map(struct seq_file *m, void *v)
  
  	if (file) {
  		seq_printf(m, " file=");
@@ -55,10 +55,10 @@ index 980de54..4ee031f 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index c93d00a..86f2a6e 100644
+index 5b42f1b..a49a07e 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -173,6 +173,7 @@ struct vm_region {
+@@ -186,6 +186,7 @@ struct vm_region {
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
@@ -66,7 +66,7 @@ index c93d00a..86f2a6e 100644
  
  	int		vm_usage;	/* region usage count (access under nommu_region_sem) */
  	bool		vm_icache_flushed : 1; /* true if the icache has been flushed for
-@@ -232,6 +233,7 @@ struct vm_area_struct {
+@@ -245,6 +246,7 @@ struct vm_area_struct {
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units, *not* PAGE_CACHE_SIZE */
  	struct file * vm_file;		/* File we map to (can be NULL). */
@@ -75,7 +75,7 @@ index c93d00a..86f2a6e 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 8e6b6f4..706439d 100644
+index 70d7619..d4100db 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -381,6 +381,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
@@ -88,7 +88,7 @@ index 8e6b6f4..706439d 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index a56e3ba..3e0aeb9 100644
+index b2b8731..4bed1f1 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
 @@ -2622,6 +2622,8 @@ reuse:
@@ -110,7 +110,7 @@ index a56e3ba..3e0aeb9 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index a65efd4..85ce2d2 100644
+index 3c0061f..dff1e4d 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -232,6 +232,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
