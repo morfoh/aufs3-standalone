@@ -38,7 +38,7 @@ index 4cc94cf..af19e30 100644
  /**
   * lookup_one_len - filesystem helper to lookup single pathname component
 diff --git a/fs/namespace.c b/fs/namespace.c
-index e5e1c7d..344999b 100644
+index 6d3a196..d832654 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -1509,6 +1509,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,

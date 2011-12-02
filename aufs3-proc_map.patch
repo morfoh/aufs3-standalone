@@ -75,10 +75,10 @@ index 5b42f1b..a49a07e 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index ba0d172..d3065fc 100644
+index da4a6a1..3d19191 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -381,6 +381,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -376,6 +376,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
  			struct address_space *mapping = file->f_mapping;
  
  			get_file(file);
@@ -159,7 +159,7 @@ index eae90af..c182f23 100644
  					added_exe_file_vma(mm);
  			}
 diff --git a/mm/nommu.c b/mm/nommu.c
-index 73419c5..75588c3 100644
+index b982290..42fbe0e 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -633,6 +633,8 @@ static void __put_nommu_region(struct vm_region *region)
