@@ -30,8 +30,6 @@
 #include <linux/kallsyms.h>
 #include <linux/sysrq.h>
 
-#include <asm/system.h>
-
 #ifdef CONFIG_AUFS_DEBUG
 #define AuDebugOn(a)		BUG_ON(a)
 
