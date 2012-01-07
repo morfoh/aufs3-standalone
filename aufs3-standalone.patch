@@ -38,10 +38,10 @@ index 4cc94cf..af19e30 100644
  /**
   * lookup_one_len - filesystem helper to lookup single pathname component
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 6d3a196..d832654 100644
+index cfc6d44..173d15a 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -1509,6 +1509,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -1506,6 +1506,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
@@ -152,10 +152,18 @@ index ee4f848..611fd70 100644
  }
 +EXPORT_SYMBOL(cap_file_mmap);
 diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-index 4450fbe..2c437e5 100644
+index 4450fbe..bc94175 100644
 --- a/security/device_cgroup.c
 +++ b/security/device_cgroup.c
-@@ -500,6 +500,7 @@ found:
+@@ -7,6 +7,7 @@
+ #include <linux/device_cgroup.h>
+ #include <linux/cgroup.h>
+ #include <linux/ctype.h>
++#include <linux/export.h>
+ #include <linux/list.h>
+ #include <linux/uaccess.h>
+ #include <linux/seq_file.h>
+@@ -500,6 +501,7 @@ found:
  
  	return -EPERM;
  }
@@ -164,7 +172,7 @@ index 4450fbe..2c437e5 100644
  int devcgroup_inode_mknod(int mode, dev_t dev)
  {
 diff --git a/security/security.c b/security/security.c
-index 0c6cc69..d58ba1b 100644
+index e2f684a..892000c 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -411,6 +411,7 @@ int security_path_rmdir(struct path *dir, struct dentry *dentry)
