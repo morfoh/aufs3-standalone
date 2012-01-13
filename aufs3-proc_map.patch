@@ -75,7 +75,7 @@ index 5b42f1b..a49a07e 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index da4a6a1..3d19191 100644
+index f34f894..8be4723 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -376,6 +376,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
