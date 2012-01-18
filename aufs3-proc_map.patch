@@ -55,10 +55,10 @@ index 980de54..4ee031f 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 5b42f1b..a49a07e 100644
+index 3cc3062..9742239 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -186,6 +186,7 @@ struct vm_region {
+@@ -185,6 +185,7 @@ struct vm_region {
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
@@ -66,7 +66,7 @@ index 5b42f1b..a49a07e 100644
  
  	int		vm_usage;	/* region usage count (access under nommu_region_sem) */
  	bool		vm_icache_flushed : 1; /* true if the icache has been flushed for
-@@ -245,6 +246,7 @@ struct vm_area_struct {
+@@ -244,6 +245,7 @@ struct vm_area_struct {
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units, *not* PAGE_CACHE_SIZE */
  	struct file * vm_file;		/* File we map to (can be NULL). */
@@ -75,10 +75,10 @@ index 5b42f1b..a49a07e 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index f34f894..8be4723 100644
+index f3fa188..e050159 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -376,6 +376,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -379,6 +379,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
  			struct address_space *mapping = file->f_mapping;
  
  			get_file(file);
@@ -88,7 +88,7 @@ index f34f894..8be4723 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 829d437..3c1b28f12 100644
+index 5e30583..c8ca7f4 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
 @@ -2622,6 +2622,8 @@ reuse:
@@ -110,7 +110,7 @@ index 829d437..3c1b28f12 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index eae90af..c182f23 100644
+index 3f758c7..5518dd3 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -232,6 +232,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -131,7 +131,7 @@ index eae90af..c182f23 100644
  			if (next->vm_flags & VM_EXECUTABLE)
  				removed_exe_file_vma(mm);
  		}
-@@ -1965,6 +1969,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -1945,6 +1949,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  
  	if (new->vm_file) {
  		get_file(new->vm_file);
@@ -140,7 +140,7 @@ index eae90af..c182f23 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			added_exe_file_vma(mm);
  	}
-@@ -1989,6 +1995,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -1969,6 +1975,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  		fput(new->vm_file);
@@ -149,7 +149,7 @@ index eae90af..c182f23 100644
  	}
  	unlink_anon_vmas(new);
   out_free_mpol:
-@@ -2356,6 +2364,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -2354,6 +2362,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  			new_vma->vm_pgoff = pgoff;
  			if (new_vma->vm_file) {
  				get_file(new_vma->vm_file);
