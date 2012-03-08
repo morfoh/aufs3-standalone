@@ -16,7 +16,7 @@ index b1822dd..8b29ab7 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index e418c5a..53efe92 100644
+index 7dcd2a2..05a146b 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -222,6 +222,10 @@ static void show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
@@ -30,7 +30,7 @@ index e418c5a..53efe92 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1033,6 +1037,8 @@ static int show_numa_map(struct seq_file *m, void *v)
+@@ -1036,6 +1040,8 @@ static int show_numa_map(struct seq_file *m, void *v)
  
  	if (file) {
  		seq_printf(m, " file=");
@@ -75,10 +75,10 @@ index 3cc3062..9742239 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 051f090..45ede26 100644
+index e2cd3e2..2c322f7 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -379,6 +379,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -380,6 +380,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
  			struct address_space *mapping = file->f_mapping;
  
  			get_file(file);
@@ -88,10 +88,10 @@ index 051f090..45ede26 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 5e30583..c8ca7f4 100644
+index fa2f04e..03ff1bc 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -2622,6 +2622,8 @@ reuse:
+@@ -2641,6 +2641,8 @@ reuse:
  		/* file_update_time outside page_lock */
  		if (vma->vm_file)
  			file_update_time(vma->vm_file);
@@ -100,7 +100,7 @@ index 5e30583..c8ca7f4 100644
  
  		return ret;
  	}
-@@ -3307,6 +3309,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3326,6 +3328,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file)
  			file_update_time(vma->vm_file);
@@ -159,7 +159,7 @@ index 3f758c7..5518dd3 100644
  					added_exe_file_vma(mm);
  			}
 diff --git a/mm/nommu.c b/mm/nommu.c
-index b982290..42fbe0e 100644
+index f59e170..c24bbf3 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -633,6 +633,8 @@ static void __put_nommu_region(struct vm_region *region)
@@ -171,7 +171,7 @@ index b982290..42fbe0e 100644
  
  		/* IO memory and memory shared directly out of the pagecache
  		 * from ramfs/tmpfs mustn't be released here */
-@@ -789,6 +791,8 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
+@@ -791,6 +793,8 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
  		vma->vm_ops->close(vma);
  	if (vma->vm_file) {
  		fput(vma->vm_file);
@@ -180,7 +180,7 @@ index b982290..42fbe0e 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  	}
-@@ -1362,6 +1366,8 @@ unsigned long do_mmap_pgoff(struct file *file,
+@@ -1364,6 +1368,8 @@ unsigned long do_mmap_pgoff(struct file *file,
  				}
  			}
  			fput(region->vm_file);
@@ -189,7 +189,7 @@ index b982290..42fbe0e 100644
  			kmem_cache_free(vm_region_jar, region);
  			region = pregion;
  			result = start;
-@@ -1438,9 +1444,13 @@ error_just_free:
+@@ -1440,9 +1446,13 @@ error_just_free:
  error:
  	if (region->vm_file)
  		fput(region->vm_file);
