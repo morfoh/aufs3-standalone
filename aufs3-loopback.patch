@@ -1,7 +1,7 @@
 aufs3.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index cd50435..e6f1679 100644
+index bbca966..8dfc881 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -500,7 +500,7 @@ out:
@@ -242,7 +242,7 @@ index b7af6a7..7a50e6e 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index 17e582e..27ffbba 100644
+index 53ad4c2..aeca21f 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
 @@ -780,7 +780,10 @@ static const struct super_operations aufs_sop = {
@@ -258,10 +258,10 @@ index 17e582e..27ffbba 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 69cd5bb..cfe0115 100644
+index fa63f1b..db8b341 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1698,6 +1698,10 @@ struct super_operations {
+@@ -1700,6 +1700,10 @@ struct super_operations {
  	int (*bdev_try_to_free_page)(struct super_block*, struct page*, gfp_t);
  	int (*nr_cached_objects)(struct super_block *);
  	void (*free_cached_objects)(struct super_block *, int);
