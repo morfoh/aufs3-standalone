@@ -26,10 +26,10 @@ index 9f4f5fe..bb0f3ba 100644
  /*
   * Empty aops. Can be used for the cases where the user does not
 diff --git a/fs/namei.c b/fs/namei.c
-index b9b8b85..0fa6752 100644
+index 6e0304c..b20770e 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1908,6 +1908,7 @@ struct dentry *lookup_hash(struct nameidata *nd)
+@@ -1864,6 +1864,7 @@ struct dentry *lookup_hash(struct nameidata *nd)
  {
  	return __lookup_hash(&nd->last, nd->path.dentry, nd);
  }
@@ -111,7 +111,7 @@ index f104d56..54f36db 100644
  static int fsnotify_mark_destroy(void *ignored)
  {
 diff --git a/fs/open.c b/fs/open.c
-index 77becc0..f634f02 100644
+index 5720854..ec59242 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -60,6 +60,7 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
