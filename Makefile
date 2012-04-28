@@ -18,17 +18,17 @@ export CONFIG_AUFS_FS
 EXTRA_CFLAGS := -I${CURDIR}/include
 EXTRA_CFLAGS += ${AUFS_DEF_CONFIG}
 
-MakeMod = ${MAKE} -C ${KDIR} M=${CURDIR}/fs/aufs EXTRA_CFLAGS="${EXTRA_CFLAGS}"
+MakeMod = -C ${KDIR} M=${CURDIR}/fs/aufs EXTRA_CFLAGS="${EXTRA_CFLAGS}"
 
 all: aufs.ko usr/include/linux/aufs_type.h
 
 clean:
-	${MakeMod} $@
+	${MAKE} ${MakeMod} $@
 	find . -type f -name '*~' | xargs -r ${RM}
 	${RM} -r aufs.ko usr
 
 install: fs/aufs/aufs.ko
-	${MakeMod} modules_install
+	${MAKE} ${MakeMod} modules_install
 
 install_header install_headers: usr/include/linux/aufs_type.h
 	install -o root -g root -p usr/include/linux/aufs_type.h \
@@ -39,7 +39,7 @@ aufs.ko: fs/aufs/aufs.ko
 
 fs/aufs/aufs.ko:
 	@echo ${EXTRA_CFLAGS}
-	${MakeMod} modules
+	${MAKE} ${MakeMod} modules
 
 usr/include/linux/aufs_type.h: d = $(shell echo ${CURDIR} | cut -c2-)
 usr/include/linux/aufs_type.h:
