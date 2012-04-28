@@ -22,10 +22,10 @@ index 2fb9779..abefac5 100644
  obj-$(CONFIG_PSTORE)		+= pstore/
 +obj-$(CONFIG_AUFS_FS)           += aufs/
 diff --git a/include/linux/Kbuild b/include/linux/Kbuild
-index d05df28..af87aad 100644
+index 3c9b616..8704efa 100644
 --- a/include/linux/Kbuild
 +++ b/include/linux/Kbuild
-@@ -65,6 +65,7 @@ header-y += atmppp.h
+@@ -66,6 +66,7 @@ header-y += atmppp.h
  header-y += atmsap.h
  header-y += atmsvc.h
  header-y += audit.h

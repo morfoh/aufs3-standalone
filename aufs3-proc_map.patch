@@ -110,7 +110,7 @@ index 6105f47..45ca062 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index a7bf6a3..24a9921 100644
+index 848ef52..19264d7 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -232,6 +232,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -122,7 +122,7 @@ index a7bf6a3..24a9921 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(vma->vm_mm);
  	}
-@@ -618,6 +620,8 @@ again:			remove_next = 1 + (end > next->vm_end);
+@@ -620,6 +622,8 @@ again:			remove_next = 1 + (end > next->vm_end);
  	if (remove_next) {
  		if (file) {
  			fput(file);
@@ -131,7 +131,7 @@ index a7bf6a3..24a9921 100644
  			if (next->vm_flags & VM_EXECUTABLE)
  				removed_exe_file_vma(mm);
  		}
-@@ -1972,6 +1976,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -1999,6 +2003,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  
  	if (new->vm_file) {
  		get_file(new->vm_file);
@@ -140,7 +140,7 @@ index a7bf6a3..24a9921 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			added_exe_file_vma(mm);
  	}
-@@ -1996,6 +2002,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2023,6 +2029,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  		fput(new->vm_file);
@@ -149,7 +149,7 @@ index a7bf6a3..24a9921 100644
  	}
  	unlink_anon_vmas(new);
   out_free_mpol:
-@@ -2380,6 +2388,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -2421,6 +2429,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  			new_vma->vm_pgoff = pgoff;
  			if (new_vma->vm_file) {
  				get_file(new_vma->vm_file);
@@ -159,7 +159,7 @@ index a7bf6a3..24a9921 100644
  					added_exe_file_vma(mm);
  			}
 diff --git a/mm/nommu.c b/mm/nommu.c
-index f59e170..c24bbf3 100644
+index bb8f4f0..faff15d 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -633,6 +633,8 @@ static void __put_nommu_region(struct vm_region *region)
@@ -180,7 +180,7 @@ index f59e170..c24bbf3 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  	}
-@@ -1364,6 +1368,8 @@ unsigned long do_mmap_pgoff(struct file *file,
+@@ -1364,6 +1368,8 @@ static unsigned long do_mmap_pgoff(struct file *file,
  				}
  			}
  			fput(region->vm_file);
