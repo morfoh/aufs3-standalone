@@ -26,7 +26,7 @@ index 9f4f5fe..bb0f3ba 100644
  /*
   * Empty aops. Can be used for the cases where the user does not
 diff --git a/fs/namei.c b/fs/namei.c
-index 80bb0b9..3430ad3 100644
+index 7ff959b..b170167 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
 @@ -1835,6 +1835,7 @@ struct dentry *lookup_hash(struct nameidata *nd)

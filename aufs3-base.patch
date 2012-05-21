@@ -1,7 +1,7 @@
 aufs3.x-rcN base patch
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 0062dd1..80bb0b9 100644
+index c427919..7ff959b 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
 @@ -1831,7 +1831,7 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
