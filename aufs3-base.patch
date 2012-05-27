@@ -1,10 +1,10 @@
 aufs3.x-rcN base patch
 
 diff --git a/fs/namei.c b/fs/namei.c
-index c427919..7ff959b 100644
+index f9e883c..65d0e88 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1831,7 +1831,7 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
+@@ -1834,7 +1834,7 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
   * needs parent already locked. Doesn't follow mounts.
   * SMP-safe.
   */

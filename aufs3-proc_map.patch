@@ -75,10 +75,10 @@ index 3cc3062..9742239 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 687a15d..235936c 100644
+index ad54c83..ad7235b 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -382,6 +382,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -413,6 +413,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
  			struct address_space *mapping = file->f_mapping;
  
  			get_file(file);
@@ -88,10 +88,10 @@ index 687a15d..235936c 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 6105f47..45ca062 100644
+index 1e77da6..438c966 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -2653,6 +2653,8 @@ reuse:
+@@ -2647,6 +2647,8 @@ reuse:
  		/* file_update_time outside page_lock */
  		if (vma->vm_file)
  			file_update_time(vma->vm_file);
@@ -100,7 +100,7 @@ index 6105f47..45ca062 100644
  
  		return ret;
  	}
-@@ -3338,6 +3340,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3332,6 +3334,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file)
  			file_update_time(vma->vm_file);
@@ -110,7 +110,7 @@ index 6105f47..45ca062 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 848ef52..19264d7 100644
+index 69a1889..e2be991 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -232,6 +232,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -131,7 +131,7 @@ index 848ef52..19264d7 100644
  			if (next->vm_flags & VM_EXECUTABLE)
  				removed_exe_file_vma(mm);
  		}
-@@ -1999,6 +2003,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2002,6 +2006,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  
  	if (new->vm_file) {
  		get_file(new->vm_file);
@@ -140,7 +140,7 @@ index 848ef52..19264d7 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			added_exe_file_vma(mm);
  	}
-@@ -2023,6 +2029,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2026,6 +2032,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  		fput(new->vm_file);
@@ -149,7 +149,7 @@ index 848ef52..19264d7 100644
  	}
  	unlink_anon_vmas(new);
   out_free_mpol:
-@@ -2421,6 +2429,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -2427,6 +2435,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  			new_vma->vm_pgoff = pgoff;
  			if (new_vma->vm_file) {
  				get_file(new_vma->vm_file);
