@@ -16,7 +16,7 @@ index b1822dd..8b29ab7 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 1030a71..7ee8bb3 100644
+index 4540b8f..0411f0f 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -226,6 +226,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
@@ -30,7 +30,7 @@ index 1030a71..7ee8bb3 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1159,6 +1163,8 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
+@@ -1185,6 +1189,8 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
  
  	if (file) {
  		seq_printf(m, " file=");
@@ -40,7 +40,7 @@ index 1030a71..7ee8bb3 100644
  	} else if (vma->vm_start <= mm->brk && vma->vm_end >= mm->start_brk) {
  		seq_printf(m, " heap");
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index 74fe164..537b0fb 100644
+index 1ccfa53..c39acb5 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -150,6 +150,10 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma,
@@ -55,10 +55,10 @@ index 74fe164..537b0fb 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 3cc3062..9742239 100644
+index dad95bd..4038f18 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -185,6 +185,7 @@ struct vm_region {
+@@ -186,6 +186,7 @@ struct vm_region {
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
@@ -66,7 +66,7 @@ index 3cc3062..9742239 100644
  
  	int		vm_usage;	/* region usage count (access under nommu_region_sem) */
  	bool		vm_icache_flushed : 1; /* true if the icache has been flushed for
-@@ -244,6 +245,7 @@ struct vm_area_struct {
+@@ -245,6 +246,7 @@ struct vm_area_struct {
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units, *not* PAGE_CACHE_SIZE */
  	struct file * vm_file;		/* File we map to (can be NULL). */
@@ -75,7 +75,7 @@ index 3cc3062..9742239 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index ad54c83..ad7235b 100644
+index ab5211b..576d844 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -413,6 +413,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
@@ -88,10 +88,10 @@ index ad54c83..ad7235b 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 1e77da6..438c966 100644
+index 1b7dc66..d3a8da0 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -2647,6 +2647,8 @@ reuse:
+@@ -2650,6 +2650,8 @@ reuse:
  		/* file_update_time outside page_lock */
  		if (vma->vm_file)
  			file_update_time(vma->vm_file);
@@ -100,7 +100,7 @@ index 1e77da6..438c966 100644
  
  		return ret;
  	}
-@@ -3332,6 +3334,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3335,6 +3337,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file)
  			file_update_time(vma->vm_file);
@@ -110,10 +110,10 @@ index 1e77da6..438c966 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 69a1889..e2be991 100644
+index 3edfcdf..ad8b120 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -232,6 +232,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
+@@ -233,6 +233,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
  		vma->vm_ops->close(vma);
  	if (vma->vm_file) {
  		fput(vma->vm_file);
@@ -122,16 +122,16 @@ index 69a1889..e2be991 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(vma->vm_mm);
  	}
-@@ -620,6 +622,8 @@ again:			remove_next = 1 + (end > next->vm_end);
- 	if (remove_next) {
+@@ -636,6 +638,8 @@ again:			remove_next = 1 + (end > next->vm_end);
  		if (file) {
+ 			uprobe_munmap(next, next->vm_start, next->vm_end);
  			fput(file);
 +			if (vma->vm_prfile)
 +				fput(vma->vm_prfile);
  			if (next->vm_flags & VM_EXECUTABLE)
  				removed_exe_file_vma(mm);
  		}
-@@ -2002,6 +2006,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -1993,6 +1997,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  
  	if (new->vm_file) {
  		get_file(new->vm_file);
@@ -140,7 +140,7 @@ index 69a1889..e2be991 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			added_exe_file_vma(mm);
  	}
-@@ -2026,6 +2032,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2017,6 +2023,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  		fput(new->vm_file);
@@ -149,17 +149,17 @@ index 69a1889..e2be991 100644
  	}
  	unlink_anon_vmas(new);
   out_free_mpol:
-@@ -2427,6 +2435,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -2417,6 +2425,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  			new_vma->vm_pgoff = pgoff;
  			if (new_vma->vm_file) {
  				get_file(new_vma->vm_file);
 +				if (new_vma->vm_prfile)
 +					get_file(new_vma->vm_prfile);
- 				if (vma->vm_flags & VM_EXECUTABLE)
- 					added_exe_file_vma(mm);
- 			}
+ 
+ 				if (uprobe_mmap(new_vma))
+ 					goto out_free_mempol;
 diff --git a/mm/nommu.c b/mm/nommu.c
-index bb8f4f0..faff15d 100644
+index c4acfbc..55ca345 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -633,6 +633,8 @@ static void __put_nommu_region(struct vm_region *region)
@@ -180,7 +180,7 @@ index bb8f4f0..faff15d 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  	}
-@@ -1364,6 +1368,8 @@ static unsigned long do_mmap_pgoff(struct file *file,
+@@ -1363,6 +1367,8 @@ unsigned long do_mmap_pgoff(struct file *file,
  				}
  			}
  			fput(region->vm_file);
@@ -189,7 +189,7 @@ index bb8f4f0..faff15d 100644
  			kmem_cache_free(vm_region_jar, region);
  			region = pregion;
  			result = start;
-@@ -1440,9 +1446,13 @@ error_just_free:
+@@ -1439,9 +1445,13 @@ error_just_free:
  error:
  	if (region->vm_file)
  		fput(region->vm_file);
