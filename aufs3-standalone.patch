@@ -203,7 +203,7 @@ index 442204c..e644a1c 100644
  int devcgroup_inode_mknod(int mode, dev_t dev)
  {
 diff --git a/security/security.c b/security/security.c
-index 3efc9b1..8ece2b2 100644
+index 3efc9b1..c7afd35 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -383,6 +383,7 @@ int security_path_rmdir(struct path *dir, struct dentry *dentry)
@@ -277,4 +277,12 @@ index 3efc9b1..8ece2b2 100644
 +EXPORT_SYMBOL(security_file_permission);
  
  int security_file_alloc(struct file *file)
+ {
+@@ -704,6 +713,7 @@ int security_mmap_file(struct file *file, unsigned long prot,
+ 		return ret;
+ 	return ima_file_mmap(file, prot);
+ }
++EXPORT_SYMBOL(security_mmap_file);
+ 
+ int security_mmap_addr(unsigned long addr)
  {

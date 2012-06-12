@@ -159,7 +159,7 @@ index 3edfcdf..ad8b120 100644
  				if (uprobe_mmap(new_vma))
  					goto out_free_mempol;
 diff --git a/mm/nommu.c b/mm/nommu.c
-index c4acfbc..55ca345 100644
+index d4b0c10..a061091 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -633,6 +633,8 @@ static void __put_nommu_region(struct vm_region *region)
