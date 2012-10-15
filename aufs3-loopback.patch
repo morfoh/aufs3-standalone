@@ -1,7 +1,7 @@
 aufs3.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 3bba655..bc9351f 100644
+index e9d594f..82da47a 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -500,7 +500,7 @@ out:
@@ -258,10 +258,10 @@ index ccf9ac7..36c4c02 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 9116d2e..02ef853 100644
+index f984f0d..5cf8358 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1878,6 +1878,10 @@ struct super_operations {
+@@ -1882,6 +1882,10 @@ struct super_operations {
  	int (*bdev_try_to_free_page)(struct super_block*, struct page*, gfp_t);
  	int (*nr_cached_objects)(struct super_block *);
  	void (*free_cached_objects)(struct super_block *, int);
@@ -273,7 +273,7 @@ index 9116d2e..02ef853 100644
  
  /*
 diff --git a/include/linux/loop.h b/include/linux/loop.h
-index 11a41a8..c190b78 100644
+index 9635116..a051548 100644
 --- a/include/linux/loop.h
 +++ b/include/linux/loop.h
 @@ -48,7 +48,7 @@ struct loop_device {

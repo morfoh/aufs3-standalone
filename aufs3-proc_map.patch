@@ -1,10 +1,10 @@
 aufs3.x-rcN proc_map patch
 
 diff --git a/fs/buffer.c b/fs/buffer.c
-index 9f6d2e4..e4df431 100644
+index 58e2e7b..f314bc2 100644
 --- a/fs/buffer.c
 +++ b/fs/buffer.c
-@@ -2323,6 +2323,8 @@ int __block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
+@@ -2317,6 +2317,8 @@ int __block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
  	 * fault so this update may be superfluous but who really cares...
  	 */
  	file_update_time(vma->vm_file);
@@ -88,10 +88,10 @@ index bf78672..cac65b6 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 3bd2280..48102f2 100644
+index a2b1efc..dd7bef3 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -414,6 +414,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -416,6 +416,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
  			struct address_space *mapping = file->f_mapping;
  
  			get_file(file);
@@ -114,7 +114,7 @@ index 5736170..908963f 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index e3e8691..dee67c4 100644
+index 872441e..77b9c1b 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -233,6 +233,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -135,7 +135,7 @@ index e3e8691..dee67c4 100644
  			if (next->vm_flags & VM_EXECUTABLE)
  				removed_exe_file_vma(mm);
  		}
-@@ -1992,6 +1996,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -1990,6 +1994,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  
  	if (new->vm_file) {
  		get_file(new->vm_file);
@@ -144,7 +144,7 @@ index e3e8691..dee67c4 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			added_exe_file_vma(mm);
  	}
-@@ -2016,6 +2022,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2014,6 +2020,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  		fput(new->vm_file);
@@ -153,7 +153,7 @@ index e3e8691..dee67c4 100644
  	}
  	unlink_anon_vmas(new);
   out_free_mpol:
-@@ -2413,6 +2421,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -2411,6 +2419,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  			new_vma->vm_pgoff = pgoff;
  			if (new_vma->vm_file) {
  				get_file(new_vma->vm_file);
@@ -163,7 +163,7 @@ index e3e8691..dee67c4 100644
  				if (vma->vm_flags & VM_EXECUTABLE)
  					added_exe_file_vma(mm);
 diff --git a/mm/nommu.c b/mm/nommu.c
-index d4b0c10..a061091 100644
+index dee2ff8..6b7a1a4 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -633,6 +633,8 @@ static void __put_nommu_region(struct vm_region *region)
@@ -184,7 +184,7 @@ index d4b0c10..a061091 100644
  		if (vma->vm_flags & VM_EXECUTABLE)
  			removed_exe_file_vma(mm);
  	}
-@@ -1363,6 +1367,8 @@ unsigned long do_mmap_pgoff(struct file *file,
+@@ -1361,6 +1365,8 @@ unsigned long do_mmap_pgoff(struct file *file,
  				}
  			}
  			fput(region->vm_file);
@@ -193,7 +193,7 @@ index d4b0c10..a061091 100644
  			kmem_cache_free(vm_region_jar, region);
  			region = pregion;
  			result = start;
-@@ -1439,9 +1445,13 @@ error_just_free:
+@@ -1437,9 +1443,13 @@ error_just_free:
  error:
  	if (region->vm_file)
  		fput(region->vm_file);
