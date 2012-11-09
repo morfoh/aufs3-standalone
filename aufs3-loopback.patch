@@ -1,7 +1,7 @@
 aufs3.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index e9d594f..82da47a 100644
+index 54046e5..b0f8b8b 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -500,7 +500,7 @@ out:
@@ -165,7 +165,7 @@ index e9d594f..82da47a 100644
  	gfp_t gfp = lo->old_gfp_mask;
  	struct block_device *bdev = lo->lo_device;
  
-@@ -990,6 +1023,7 @@ static int loop_clr_fd(struct loop_device *lo)
+@@ -1003,6 +1036,7 @@ static int loop_clr_fd(struct loop_device *lo)
  
  	spin_lock_irq(&lo->lo_lock);
  	lo->lo_backing_file = NULL;
@@ -173,7 +173,7 @@ index e9d594f..82da47a 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
-@@ -1030,6 +1064,8 @@ static int loop_clr_fd(struct loop_device *lo)
+@@ -1043,6 +1077,8 @@ static int loop_clr_fd(struct loop_device *lo)
  	 * bd_mutex which is usually taken before lo_ctl_mutex.
  	 */
  	fput(filp);
@@ -183,7 +183,7 @@ index e9d594f..82da47a 100644
  }
  
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 896f3e7..40d875e 100644
+index 80ea935..564d2e3 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
 @@ -352,7 +352,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
@@ -258,10 +258,10 @@ index ccf9ac7..36c4c02 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f984f0d..5cf8358 100644
+index 963a61b..701dab1 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1882,6 +1882,10 @@ struct super_operations {
+@@ -1621,6 +1621,10 @@ struct super_operations {
  	int (*bdev_try_to_free_page)(struct super_block*, struct page*, gfp_t);
  	int (*nr_cached_objects)(struct super_block *);
  	void (*free_cached_objects)(struct super_block *, int);
@@ -273,10 +273,10 @@ index f984f0d..5cf8358 100644
  
  /*
 diff --git a/include/linux/loop.h b/include/linux/loop.h
-index 9635116..a051548 100644
+index 6492181..2b61d6a 100644
 --- a/include/linux/loop.h
 +++ b/include/linux/loop.h
-@@ -48,7 +48,7 @@ struct loop_device {
+@@ -44,7 +44,7 @@ struct loop_device {
  	int		(*ioctl)(struct loop_device *, int cmd, 
  				 unsigned long arg); 
  

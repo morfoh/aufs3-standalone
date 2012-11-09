@@ -22,7 +22,7 @@ index dac6792..e3f2c15 100644
  
  /*
 diff --git a/fs/inode.c b/fs/inode.c
-index 7b2c8fa..0c4318d 100644
+index ee497f9..5e7eee7 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -56,6 +56,7 @@ static struct hlist_head *inode_hashtable __read_mostly;
@@ -42,7 +42,7 @@ index 7b2c8fa..0c4318d 100644
  /**
   *	touch_atime	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 7bdf790..5b85c4c 100644
+index 2496062..3e66a90 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -50,6 +50,7 @@ EXPORT_SYMBOL_GPL(fs_kobj);
@@ -123,7 +123,7 @@ index f104d56..54f36db 100644
  static int fsnotify_mark_destroy(void *ignored)
  {
 diff --git a/fs/open.c b/fs/open.c
-index 44da0fe..d4f8157 100644
+index 59071f5..7e4c856 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -60,6 +60,7 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
@@ -171,7 +171,7 @@ index 6dbae46..9f4f29a 100644
  }
 +EXPORT_SYMBOL(cap_mmap_file);
 diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-index 44dfc41..15b21e0 100644
+index 842c254..e7dd469 100644
 --- a/security/device_cgroup.c
 +++ b/security/device_cgroup.c
 @@ -7,6 +7,7 @@
@@ -182,16 +182,16 @@ index 44dfc41..15b21e0 100644
  #include <linux/list.h>
  #include <linux/uaccess.h>
  #include <linux/seq_file.h>
-@@ -573,6 +574,7 @@ int __devcgroup_inode_permission(struct inode *inode, int mask)
- 	return __devcgroup_check_permission(dev_cgroup, type, imajor(inode),
- 					    iminor(inode), access);
+@@ -609,6 +610,7 @@ int __devcgroup_inode_permission(struct inode *inode, int mask)
+ 	return __devcgroup_check_permission(type, imajor(inode), iminor(inode),
+ 			access);
  }
 +EXPORT_SYMBOL(__devcgroup_inode_permission);
  
  int devcgroup_inode_mknod(int mode, dev_t dev)
  {
 diff --git a/security/security.c b/security/security.c
-index 3724029..5464c76 100644
+index 8dcd4ae..6efe561 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -396,6 +396,7 @@ int security_path_rmdir(struct path *dir, struct dentry *dentry)
