@@ -43,11 +43,8 @@ fs/aufs/aufs.ko:
 
 usr/include/linux/aufs_type.h: d = $(shell echo ${CURDIR} | cut -c2-)
 usr/include/linux/aufs_type.h:
-	echo '$$(install-file):srctree= $$(install-file):objtree=' |\
-	tr ' ' '\n' |\
 	${MAKE} -rR -C ${KDIR} \
 		-f scripts/Makefile.headersinst \
-		-f - \
 		-f Makefile \
-		obj=${d}/include/linux dst=${d}/usr/include/linux
+		obj=${d}/include/uapi/linux dst=${d}/usr/include/linux
 	test -s $@
