@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2012 Junjiro R. Okajima
+ * Copyright (C) 2005-2013 Junjiro R. Okajima
  *
  * This program, aufs is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -735,7 +735,7 @@ static int aufs_encode_fh(struct inode *inode, __u32 *fh, int *max_len,
 	err = fh[Fh_h_type];
 	*max_len += Fh_tail;
 	/* todo: macros? */
-	if (err != 255)
+	if (err != FILEID_INVALID)
 		err = 99;
 	else
 		AuWarn1("%s encode_fh failed\n", au_sbtype(h_sb));
@@ -749,7 +749,7 @@ out_unlock:
 	si_read_unlock(sb);
 out:
 	if (unlikely(err < 0))
-		err = 255;
+		err = FILEID_INVALID;
 	return err;
 }
 
