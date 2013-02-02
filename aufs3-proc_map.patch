@@ -1,7 +1,7 @@
 aufs3.x-rcN proc_map patch
 
 diff --git a/fs/buffer.c b/fs/buffer.c
-index c017a2d..ea5535c 100644
+index 7a75c3e..b9c3f3c 100644
 --- a/fs/buffer.c
 +++ b/fs/buffer.c
 @@ -2380,6 +2380,8 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
@@ -88,7 +88,7 @@ index f8f5162..25ce88d 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 65ca6d2..d3c9c0e 100644
+index c535f33..76da22a 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -417,6 +417,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
