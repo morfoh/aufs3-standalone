@@ -89,6 +89,21 @@ static int au_test_anon(struct dentry *dentry)
 	return !!(dentry->d_flags & DCACHE_DISCONNECTED);
 }
 
+int au_test_nfsd(void)
+{
+	int ret;
+	struct task_struct *tsk = current;
+	char comm[sizeof(tsk->comm)];
+
+	ret = 0;
+	if (tsk->flags & PF_KTHREAD) {
+		get_task_comm(comm, tsk);
+		ret = !strcmp(comm, "nfsd");
+	}
+
+	return ret;
+}
+
 /* ---------------------------------------------------------------------- */
 /* inode generation external table */
 
@@ -147,7 +162,7 @@ int au_xigen_new(struct inode *inode)
 	file = sbinfo->si_xigen;
 	BUG_ON(!file);
 
-	if (i_size_read(file->f_dentry->d_inode)
+	if (vfsub_f_size_read(file)
 	    < pos + sizeof(inode->i_generation)) {
 		inode->i_generation = atomic_inc_return(&sbinfo->si_xigen_next);
 		sz = xino_fwrite(sbinfo->si_xwrite, file, &inode->i_generation,
@@ -211,7 +226,6 @@ static struct dentry *decode_by_ino(struct super_block *sb, ino_t ino,
 	struct dentry *dentry, *d;
 	struct inode *inode;
 	unsigned int sigen;
-	struct hlist_node *p;
 
 	dentry = NULL;
 	inode = ilookup(sb, ino);
@@ -230,7 +244,7 @@ static struct dentry *decode_by_ino(struct super_block *sb, ino_t ino,
 		dentry = d_find_alias(inode);
 	else {
 		spin_lock(&inode->i_lock);
-		hlist_for_each_entry(d, p, &inode->i_dentry, d_alias) {
+		hlist_for_each_entry(d, &inode->i_dentry, d_alias) {
 			spin_lock(&d->d_lock);
 			if (!au_test_anon(d)
 			    && d->d_parent->d_inode->i_ino == dir_ino) {
