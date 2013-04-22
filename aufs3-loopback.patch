@@ -1,7 +1,7 @@
 aufs3.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 747bb2a..a776f2f 100644
+index fe5f640..1b76a48 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -511,7 +511,7 @@ out:
@@ -173,7 +173,7 @@ index 747bb2a..a776f2f 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
-@@ -1057,6 +1091,8 @@ static int loop_clr_fd(struct loop_device *lo)
+@@ -1074,6 +1108,8 @@ static int loop_clr_fd(struct loop_device *lo)
  	 * bd_mutex which is usually taken before lo_ctl_mutex.
  	 */
  	fput(filp);
@@ -242,7 +242,7 @@ index 88d019c..8707c3a 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index 2769194..97e8930 100644
+index 4f57ba0..786ffea 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
 @@ -811,7 +811,10 @@ static const struct super_operations aufs_sop = {
