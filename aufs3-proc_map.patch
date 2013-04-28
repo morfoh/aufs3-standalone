@@ -101,10 +101,10 @@ index 1766d32..c17b93b 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 494526a..97cc6c9 100644
+index ba94dec..2c87da1 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3408,6 +3408,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3456,6 +3456,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file && !page_mkwrite)
  			file_update_time(vma->vm_file);
@@ -114,7 +114,7 @@ index 494526a..97cc6c9 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 6466699..3f73c2b 100644
+index 0db0de1..147446c 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -243,6 +243,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -163,7 +163,7 @@ index 6466699..3f73c2b 100644
  				new_vma->vm_ops->open(new_vma);
  			vma_link(mm, new_vma, prev, rb_link, rb_parent);
 diff --git a/mm/nommu.c b/mm/nommu.c
-index e193280..7cf8e31 100644
+index 2f3ea74..06529ce 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -650,6 +650,8 @@ static void __put_nommu_region(struct vm_region *region)

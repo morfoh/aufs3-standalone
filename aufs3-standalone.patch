@@ -22,7 +22,7 @@ index ca5948f..b553610 100644
  
  /*
 diff --git a/fs/inode.c b/fs/inode.c
-index 0b99538..46a6995 100644
+index e83cd1e..fa2245a 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -56,6 +56,7 @@ static struct hlist_head *inode_hashtable __read_mostly;
@@ -42,7 +42,7 @@ index 0b99538..46a6995 100644
  /**
   *	touch_atime	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index d581e45..6bb07d5 100644
+index 341d3f5..18f5bb0 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -52,6 +52,7 @@ EXPORT_SYMBOL_GPL(fs_kobj);
@@ -210,7 +210,7 @@ index 1c69e38..7392d19 100644
  int devcgroup_inode_mknod(int mode, dev_t dev)
  {
 diff --git a/security/security.c b/security/security.c
-index 7b88c6a..5d00a30 100644
+index 03f248b..892e803 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -396,6 +396,7 @@ int security_path_rmdir(struct path *dir, struct dentry *dentry)

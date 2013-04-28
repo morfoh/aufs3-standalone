@@ -14,7 +14,7 @@ index cd4d87a..ca5948f 100644
  /* SLAB cache for file structures */
  static struct kmem_cache *filp_cachep __read_mostly;
 diff --git a/fs/inode.c b/fs/inode.c
-index f5f7c06..0b99538 100644
+index a898b3d..e83cd1e 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -1498,7 +1498,7 @@ static int relatime_need_update(struct vfsmount *mnt, struct inode *inode,
