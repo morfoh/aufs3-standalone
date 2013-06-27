@@ -101,10 +101,10 @@ index 987b28a..02ab913d 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 6dc1882..3f7b327 100644
+index 61a262b..d12e816 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3461,6 +3461,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3452,6 +3452,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file && !page_mkwrite)
  			file_update_time(vma->vm_file);
