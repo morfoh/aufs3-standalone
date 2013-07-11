@@ -1,10 +1,10 @@
 aufs3.x-rcN proc_map patch
 
 diff --git a/fs/buffer.c b/fs/buffer.c
-index d2a4d1b..7e0240f 100644
+index 4d74335..6b7ced7 100644
 --- a/fs/buffer.c
 +++ b/fs/buffer.c
-@@ -2388,6 +2388,8 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
+@@ -2437,6 +2437,8 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
  	 * fault so this update may be superfluous but who really cares...
  	 */
  	file_update_time(vma->vm_file);
@@ -29,10 +29,10 @@ index ccfd99b..c09e2cf 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 3e636d8..1004190 100644
+index dbf61f6..1c3331e 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -272,6 +272,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
+@@ -273,6 +273,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
  
  	if (file) {
  		struct inode *inode = file_inode(vma->vm_file);
@@ -43,7 +43,7 @@ index 3e636d8..1004190 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1285,6 +1289,8 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
+@@ -1372,6 +1376,8 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
  
  	if (file) {
  		seq_printf(m, " file=");
@@ -88,7 +88,7 @@ index ace9a5f..6636779 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 987b28a..02ab913d 100644
+index 6e6a1c1..7dc66c2 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -418,6 +418,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
@@ -101,10 +101,10 @@ index 987b28a..02ab913d 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index 61a262b..d12e816 100644
+index b68812d..bfb3288 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3452,6 +3452,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3453,6 +3453,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file && !page_mkwrite)
  			file_update_time(vma->vm_file);
@@ -114,7 +114,7 @@ index 61a262b..d12e816 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index f681e18..0227ae5 100644
+index 8468ffd..e68ad04 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -251,6 +251,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -163,10 +163,10 @@ index f681e18..0227ae5 100644
  				new_vma->vm_ops->open(new_vma);
  			vma_link(mm, new_vma, prev, rb_link, rb_parent);
 diff --git a/mm/nommu.c b/mm/nommu.c
-index 298884d..d30faea 100644
+index e44e6e0..b1a6d0d 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
-@@ -651,6 +651,8 @@ static void __put_nommu_region(struct vm_region *region)
+@@ -653,6 +653,8 @@ static void __put_nommu_region(struct vm_region *region)
  
  		if (region->vm_file)
  			fput(region->vm_file);
@@ -175,7 +175,7 @@ index 298884d..d30faea 100644
  
  		/* IO memory and memory shared directly out of the pagecache
  		 * from ramfs/tmpfs mustn't be released here */
-@@ -809,6 +811,8 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
+@@ -811,6 +813,8 @@ static void delete_vma(struct mm_struct *mm, struct vm_area_struct *vma)
  		vma->vm_ops->close(vma);
  	if (vma->vm_file)
  		fput(vma->vm_file);
@@ -184,7 +184,7 @@ index 298884d..d30faea 100644
  	put_nommu_region(vma->vm_region);
  	kmem_cache_free(vm_area_cachep, vma);
  }
-@@ -1375,6 +1379,8 @@ unsigned long do_mmap_pgoff(struct file *file,
+@@ -1377,6 +1381,8 @@ unsigned long do_mmap_pgoff(struct file *file,
  				}
  			}
  			fput(region->vm_file);
@@ -193,7 +193,7 @@ index 298884d..d30faea 100644
  			kmem_cache_free(vm_region_jar, region);
  			region = pregion;
  			result = start;
-@@ -1451,9 +1457,13 @@ error_just_free:
+@@ -1453,9 +1459,13 @@ error_just_free:
  error:
  	if (region->vm_file)
  		fput(region->vm_file);

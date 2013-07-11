@@ -1,7 +1,7 @@
 aufs3.x-rcN loopback patch
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index d92d50f..9fb5490 100644
+index 40e7155..afc18dd 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -513,7 +513,7 @@ out:
@@ -110,7 +110,29 @@ index d92d50f..9fb5490 100644
   out:
  	return error;
  }
-@@ -822,7 +844,7 @@ static void loop_config_discard(struct loop_device *lo)
+@@ -691,6 +713,21 @@ static inline int is_loop_device(struct file *file)
+ 	return i && S_ISBLK(i->i_mode) && MAJOR(i->i_rdev) == LOOP_MAJOR;
+ }
+ 
++/* for AUFS */
++struct file *loop_backing_file(struct super_block *sb)
++{
++	struct file *ret;
++	struct loop_device *l;
++
++	ret = NULL;
++	if (MAJOR(sb->s_dev) == LOOP_MAJOR) {
++		l = sb->s_bdev->bd_disk->private_data;
++		ret = l->lo_backing_file;
++	}
++	return ret;
++}
++EXPORT_SYMBOL(loop_backing_file);
++
+ /* loop sysfs attributes */
+ 
+ static ssize_t loop_attr_show(struct device *dev, char *page,
+@@ -822,7 +859,7 @@ static void loop_config_discard(struct loop_device *lo)
  static int loop_set_fd(struct loop_device *lo, fmode_t mode,
  		       struct block_device *bdev, unsigned int arg)
  {
@@ -119,7 +141,7 @@ index d92d50f..9fb5490 100644
  	struct inode	*inode;
  	struct address_space *mapping;
  	unsigned lo_blocksize;
-@@ -837,6 +859,12 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+@@ -837,6 +874,12 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
  	file = fget(arg);
  	if (!file)
  		goto out;
@@ -132,7 +154,7 @@ index d92d50f..9fb5490 100644
  
  	error = -EBUSY;
  	if (lo->lo_state != Lo_unbound)
-@@ -885,6 +913,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+@@ -885,6 +928,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
  	lo->lo_device = bdev;
  	lo->lo_flags = lo_flags;
  	lo->lo_backing_file = file;
@@ -140,7 +162,7 @@ index d92d50f..9fb5490 100644
  	lo->transfer = transfer_none;
  	lo->ioctl = NULL;
  	lo->lo_sizelimit = 0;
-@@ -936,6 +965,7 @@ out_clr:
+@@ -936,6 +980,7 @@ out_clr:
  	lo->lo_thread = NULL;
  	lo->lo_device = NULL;
  	lo->lo_backing_file = NULL;
@@ -148,7 +170,7 @@ index d92d50f..9fb5490 100644
  	lo->lo_flags = 0;
  	set_capacity(lo->lo_disk, 0);
  	invalidate_bdev(bdev);
-@@ -945,6 +975,8 @@ out_clr:
+@@ -945,6 +990,8 @@ out_clr:
  	lo->lo_state = Lo_unbound;
   out_putf:
  	fput(file);
@@ -157,7 +179,7 @@ index d92d50f..9fb5490 100644
   out:
  	/* This is safe: open() is still holding a reference. */
  	module_put(THIS_MODULE);
-@@ -991,6 +1023,7 @@ loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
+@@ -991,6 +1038,7 @@ loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
  static int loop_clr_fd(struct loop_device *lo)
  {
  	struct file *filp = lo->lo_backing_file;
@@ -165,7 +187,7 @@ index d92d50f..9fb5490 100644
  	gfp_t gfp = lo->old_gfp_mask;
  	struct block_device *bdev = lo->lo_device;
  
-@@ -1024,6 +1057,7 @@ static int loop_clr_fd(struct loop_device *lo)
+@@ -1024,6 +1072,7 @@ static int loop_clr_fd(struct loop_device *lo)
  
  	spin_lock_irq(&lo->lo_lock);
  	lo->lo_backing_file = NULL;
@@ -173,7 +195,7 @@ index d92d50f..9fb5490 100644
  	spin_unlock_irq(&lo->lo_lock);
  
  	loop_release_xfer(lo);
-@@ -1066,6 +1100,8 @@ static int loop_clr_fd(struct loop_device *lo)
+@@ -1066,6 +1115,8 @@ static int loop_clr_fd(struct loop_device *lo)
  	 * bd_mutex which is usually taken before lo_ctl_mutex.
  	 */
  	fput(filp);
@@ -182,8 +204,21 @@ index d92d50f..9fb5490 100644
  	return 0;
  }
  
+diff --git a/drivers/block/loop.h b/drivers/block/loop.h
+index 90df5d6..cb91822 100644
+--- a/drivers/block/loop.h
++++ b/drivers/block/loop.h
+@@ -44,7 +44,7 @@ struct loop_device {
+ 	int		(*ioctl)(struct loop_device *, int cmd, 
+ 				 unsigned long arg); 
+ 
+-	struct file *	lo_backing_file;
++	struct file *	lo_backing_file, *lo_backing_virt_file;
+ 	struct block_device *lo_device;
+ 	unsigned	lo_blocksize;
+ 	void		*key_data; 
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 3183dff..72135bc 100644
+index 38e10fb..9db8654 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
 @@ -353,7 +353,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
@@ -196,10 +231,39 @@ index 3183dff..72135bc 100644
  		if (file->f_mapping != h_file->f_mapping) {
  			file->f_mapping = h_file->f_mapping;
 diff --git a/fs/aufs/loop.c b/fs/aufs/loop.c
-index ccae19c..15dc5c2 100644
+index ccae19c..d2b5a69 100644
 --- a/fs/aufs/loop.c
 +++ b/fs/aufs/loop.c
-@@ -133,3 +133,19 @@ void au_loopback_fin(void)
+@@ -20,7 +20,8 @@
+  * support for loopback block device as a branch
+  */
+ 
+-#include <linux/loop.h>
++#include <linux/major.h>
++#include <linux/genhd.h>
+ #include "aufs.h"
+ 
+ /*
+@@ -29,14 +30,14 @@
+ int au_test_loopback_overlap(struct super_block *sb, struct dentry *h_adding)
+ {
+ 	struct super_block *h_sb;
+-	struct loop_device *l;
++	struct file *backing_file;
+ 
+ 	h_sb = h_adding->d_sb;
+-	if (MAJOR(h_sb->s_dev) != LOOP_MAJOR)
++	backing_file = loop_backing_file(h_sb);
++	if (!backing_file)
+ 		return 0;
+ 
+-	l = h_sb->s_bdev->bd_disk->private_data;
+-	h_adding = l->lo_backing_file->f_dentry;
++	h_adding = backing_file->f_dentry;
+ 	/*
+ 	 * h_adding can be local NFS.
+ 	 * in this case aufs cannot detect the loop.
+@@ -133,3 +134,19 @@ void au_loopback_fin(void)
  {
  	kfree(au_warn_loopback_array);
  }
@@ -220,19 +284,32 @@ index ccae19c..15dc5c2 100644
 +	return f;
 +}
 diff --git a/fs/aufs/loop.h b/fs/aufs/loop.h
-index 88d019c..8707c3a 100644
+index 88d019c..e3a32a9 100644
 --- a/fs/aufs/loop.h
 +++ b/fs/aufs/loop.h
-@@ -36,6 +36,8 @@ void au_warn_loopback(struct super_block *h_sb);
+@@ -29,6 +29,9 @@ struct dentry;
+ struct super_block;
+ 
+ #ifdef CONFIG_AUFS_BDEV_LOOP
++/* drivers/block/loop.c */
++struct file *loop_backing_file(struct super_block *sb);
++
+ /* loop.c */
+ int au_test_loopback_overlap(struct super_block *sb, struct dentry *h_adding);
+ int au_test_loopback_kthread(void);
+@@ -36,7 +39,11 @@ void au_warn_loopback(struct super_block *h_sb);
  
  int au_loopback_init(void);
  void au_loopback_fin(void);
 +
 +struct file *aufs_real_loop(struct file *file);
  #else
++AuStub(struct file *, loop_backing_file, return NULL)
++
  AuStubInt0(au_test_loopback_overlap, struct super_block *sb,
  	   struct dentry *h_adding)
-@@ -44,6 +46,8 @@ AuStubVoid(au_warn_loopback, struct super_block *h_sb)
+ AuStubInt0(au_test_loopback_kthread, void)
+@@ -44,6 +51,8 @@ AuStubVoid(au_warn_loopback, struct super_block *h_sb)
  
  AuStubInt0(au_loopback_init, void)
  AuStubVoid(au_loopback_fin, void)
@@ -258,10 +335,10 @@ index 4f57ba0..786ffea 100644
  
  /* ---------------------------------------------------------------------- */
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0148214..1296163 100644
+index 82e1c89..b830d73 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1616,6 +1616,10 @@ struct super_operations {
+@@ -1625,6 +1625,10 @@ struct super_operations {
  	int (*bdev_try_to_free_page)(struct super_block*, struct page*, gfp_t);
  	int (*nr_cached_objects)(struct super_block *);
  	void (*free_cached_objects)(struct super_block *, int);
@@ -272,16 +349,3 @@ index 0148214..1296163 100644
  };
  
  /*
-diff --git a/include/linux/loop.h b/include/linux/loop.h
-index 460b60f..6910d80 100644
---- a/include/linux/loop.h
-+++ b/include/linux/loop.h
-@@ -44,7 +44,7 @@ struct loop_device {
- 	int		(*ioctl)(struct loop_device *, int cmd, 
- 				 unsigned long arg); 
- 
--	struct file *	lo_backing_file;
-+	struct file *	lo_backing_file, *lo_backing_virt_file;
- 	struct block_device *lo_device;
- 	unsigned	lo_blocksize;
- 	void		*key_data; 

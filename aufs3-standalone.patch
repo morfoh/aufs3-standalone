@@ -1,7 +1,7 @@
 aufs3.x-rcN standalone patch
 
 diff --git a/fs/file_table.c b/fs/file_table.c
-index 8db8096..e271e28 100644
+index 496a698..27e4471 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
 @@ -37,6 +37,7 @@ struct files_stat_struct files_stat = {
@@ -22,7 +22,7 @@ index 8db8096..e271e28 100644
  
  /*
 diff --git a/fs/inode.c b/fs/inode.c
-index f324521..bff7670 100644
+index cc35712..16e2667 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -56,6 +56,7 @@ static struct hlist_head *inode_hashtable __read_mostly;
@@ -33,7 +33,7 @@ index f324521..bff7670 100644
  
  /*
   * Empty aops. Can be used for the cases where the user does not
-@@ -1514,6 +1515,7 @@ int update_time(struct inode *inode, struct timespec *time, int flags)
+@@ -1516,6 +1517,7 @@ int update_time(struct inode *inode, struct timespec *time, int flags)
  	mark_inode_dirty_sync(inode);
  	return 0;
  }
@@ -142,7 +142,7 @@ index fc6b49b..a6bb87d 100644
  static int fsnotify_mark_destroy(void *ignored)
  {
 diff --git a/fs/open.c b/fs/open.c
-index 8c74100..be563cd 100644
+index fca72c4..8435f29 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -61,6 +61,7 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
@@ -154,18 +154,18 @@ index 8c74100..be563cd 100644
  long vfs_truncate(struct path *path, loff_t length)
  {
 diff --git a/fs/splice.c b/fs/splice.c
-index 987346f..8d6a045 100644
+index e147583..789f6b2 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -1120,6 +1120,7 @@ long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
- 	file_end_write(out);
- 	return ret;
+@@ -1106,6 +1106,7 @@ long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 
+ 	return splice_write(pipe, out, ppos, len, flags);
  }
 +EXPORT_SYMBOL(do_splice_from);
  
  /*
   * Attempt to initiate a splice from a file to a pipe.
-@@ -1146,6 +1147,7 @@ long do_splice_to(struct file *in, loff_t *ppos,
+@@ -1132,6 +1133,7 @@ long do_splice_to(struct file *in, loff_t *ppos,
  
  	return splice_read(in, ppos, pipe, len, flags);
  }
@@ -190,7 +190,7 @@ index c44b6fe..d78b003 100644
  }
 +EXPORT_SYMBOL(cap_mmap_file);
 diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-index dd0dc57..9760ecb6 100644
+index e8aad69..5f3baa6 100644
 --- a/security/device_cgroup.c
 +++ b/security/device_cgroup.c
 @@ -7,6 +7,7 @@
@@ -201,7 +201,7 @@ index dd0dc57..9760ecb6 100644
  #include <linux/list.h>
  #include <linux/uaccess.h>
  #include <linux/seq_file.h>
-@@ -789,6 +790,7 @@ int __devcgroup_inode_permission(struct inode *inode, int mask)
+@@ -769,6 +770,7 @@ int __devcgroup_inode_permission(struct inode *inode, int mask)
  	return __devcgroup_check_permission(type, imajor(inode), iminor(inode),
  			access);
  }
