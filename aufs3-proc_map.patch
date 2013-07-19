@@ -68,7 +68,7 @@ index 56123a6..b987a88 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index ace9a5f..6636779 100644
+index fb425aa..cc0a3a4 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
 @@ -213,6 +213,7 @@ struct vm_region {
@@ -88,10 +88,10 @@ index ace9a5f..6636779 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 6e6a1c1..7dc66c2 100644
+index 66635c8..7735423 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -418,6 +418,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+@@ -416,6 +416,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
  			struct address_space *mapping = file->f_mapping;
  
  			get_file(file);
@@ -101,7 +101,7 @@ index 6e6a1c1..7dc66c2 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index b68812d..bfb3288 100644
+index 1ce2e2a..b238822 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
 @@ -3453,6 +3453,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
@@ -114,7 +114,7 @@ index b68812d..bfb3288 100644
  		unlock_page(vmf.page);
  		if (anon)
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 8468ffd..e68ad04 100644
+index fbad7b0..891f682 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
 @@ -251,6 +251,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
@@ -135,7 +135,7 @@ index 8468ffd..e68ad04 100644
  		}
  		if (next->anon_vma)
  			anon_vma_merge(vma, next);
-@@ -2442,6 +2446,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2416,6 +2420,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  
  	if (new->vm_file)
  		get_file(new->vm_file);
@@ -144,7 +144,7 @@ index 8468ffd..e68ad04 100644
  
  	if (new->vm_ops && new->vm_ops->open)
  		new->vm_ops->open(new);
-@@ -2461,6 +2467,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
+@@ -2435,6 +2441,8 @@ static int __split_vma(struct mm_struct * mm, struct vm_area_struct * vma,
  		new->vm_ops->close(new);
  	if (new->vm_file)
  		fput(new->vm_file);
@@ -153,7 +153,7 @@ index 8468ffd..e68ad04 100644
  	unlink_anon_vmas(new);
   out_free_mpol:
  	mpol_put(pol);
-@@ -2860,6 +2868,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+@@ -2834,6 +2842,8 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  				goto out_free_mempol;
  			if (new_vma->vm_file)
  				get_file(new_vma->vm_file);
@@ -163,7 +163,7 @@ index 8468ffd..e68ad04 100644
  				new_vma->vm_ops->open(new_vma);
  			vma_link(mm, new_vma, prev, rb_link, rb_parent);
 diff --git a/mm/nommu.c b/mm/nommu.c
-index e44e6e0..b1a6d0d 100644
+index ecd1f15..0065be0 100644
 --- a/mm/nommu.c
 +++ b/mm/nommu.c
 @@ -653,6 +653,8 @@ static void __put_nommu_region(struct vm_region *region)
