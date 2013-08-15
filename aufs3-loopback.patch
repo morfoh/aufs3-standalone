@@ -183,7 +183,7 @@ index dfe7583..c175e22 100644
  }
  
 diff --git a/fs/aufs/f_op.c b/fs/aufs/f_op.c
-index 56924c5..b832bf8 100644
+index b24d989..752b21c 100644
 --- a/fs/aufs/f_op.c
 +++ b/fs/aufs/f_op.c
 @@ -352,7 +352,7 @@ static ssize_t aufs_splice_read(struct file *file, loff_t *ppos,
@@ -242,7 +242,7 @@ index 88d019c..8707c3a 100644
  
  #endif /* __KERNEL__ */
 diff --git a/fs/aufs/super.c b/fs/aufs/super.c
-index 4f57ba0..786ffea 100644
+index 3955f86..b1d5e7f 100644
 --- a/fs/aufs/super.c
 +++ b/fs/aufs/super.c
 @@ -811,7 +811,10 @@ static const struct super_operations aufs_sop = {
