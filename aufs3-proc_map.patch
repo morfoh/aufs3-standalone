@@ -88,7 +88,7 @@ index faf4b7c..cd750ff 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index e23bb19..76de27c 100644
+index c9eaf201..1dbd1b9 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -416,6 +416,8 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
@@ -101,7 +101,7 @@ index e23bb19..76de27c 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index af84bc0..629d88a 100644
+index b3c6bf9..a7560d9 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
 @@ -3466,6 +3466,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
