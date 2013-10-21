@@ -1,10 +1,10 @@
 aufs3.x-rcN proc_map patch
 
 diff --git a/fs/buffer.c b/fs/buffer.c
-index 4d74335..6b7ced7 100644
+index 6024877..23b0f24 100644
 --- a/fs/buffer.c
 +++ b/fs/buffer.c
-@@ -2437,6 +2437,8 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
+@@ -2447,6 +2447,8 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
  	 * fault so this update may be superfluous but who really cares...
  	 */
  	file_update_time(vma->vm_file);
@@ -29,7 +29,7 @@ index ccfd99b..c09e2cf 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 7366e9d..d29149f 100644
+index 390bdab..5c8b892 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
 @@ -273,6 +273,10 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
@@ -43,7 +43,7 @@ index 7366e9d..d29149f 100644
  		dev = inode->i_sb->s_dev;
  		ino = inode->i_ino;
  		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-@@ -1411,6 +1415,8 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
+@@ -1413,6 +1417,8 @@ static int show_numa_map(struct seq_file *m, void *v, int is_pid)
  
  	if (file) {
  		seq_printf(m, " file=");
@@ -101,10 +101,10 @@ index 086fe73..c1f4a27 100644
  				atomic_dec(&inode->i_writecount);
  			mutex_lock(&mapping->i_mmap_mutex);
 diff --git a/mm/memory.c b/mm/memory.c
-index ca00039..ef70828 100644
+index 1311f26..6e2efeb 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3455,6 +3455,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -3457,6 +3457,8 @@ static int __do_fault(struct mm_struct *mm, struct vm_area_struct *vma,
  		/* file_update_time outside page_lock */
  		if (vma->vm_file && !page_mkwrite)
  			file_update_time(vma->vm_file);
