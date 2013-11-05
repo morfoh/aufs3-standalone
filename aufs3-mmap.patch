@@ -1,4 +1,4 @@
-aufs3.x-rcN mmap patch
+aufs3.12 mmap patch
 
 diff --git a/fs/buffer.c b/fs/buffer.c
 index 6024877..95bbf13 100644
@@ -253,7 +253,7 @@ index 539eeb9..5e700b1 100644
  	return error;
  }
 diff --git a/mm/memory.c b/mm/memory.c
-index 1311f26..ff5a749 100644
+index d176154..49cafa9 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
 @@ -2745,7 +2745,7 @@ reuse:
