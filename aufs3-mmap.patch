@@ -67,7 +67,7 @@ index 678455d..ad0ce45 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1cedd00..a31519b 100644
+index 3552717..3c5a972 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -17,6 +17,9 @@
@@ -169,10 +169,10 @@ index 1cedd00..a31519b 100644
  extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
  		void *buf, int len, int write);
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index bd29941..b5c6151 100644
+index 290901a..c21588b 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -230,6 +230,7 @@ struct vm_region {
+@@ -231,6 +231,7 @@ struct vm_region {
  	unsigned long	vm_top;		/* region allocated to here */
  	unsigned long	vm_pgoff;	/* the offset in vm_file corresponding to vm_start */
  	struct file	*vm_file;	/* the backing file or NULL */
@@ -180,7 +180,7 @@ index bd29941..b5c6151 100644
  
  	int		vm_usage;	/* region usage count (access under nommu_region_sem) */
  	bool		vm_icache_flushed : 1; /* true if the icache has been flushed for
-@@ -298,6 +299,7 @@ struct vm_area_struct {
+@@ -299,6 +300,7 @@ struct vm_area_struct {
  	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
  					   units, *not* PAGE_CACHE_SIZE */
  	struct file * vm_file;		/* File we map to (can be NULL). */
@@ -189,7 +189,7 @@ index bd29941..b5c6151 100644
  
  #ifndef CONFIG_MMU
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 728d5be..4e4344e 100644
+index 5721f0e..ae597af 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
 @@ -412,7 +412,7 @@ static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
@@ -215,24 +215,19 @@ index b7749a9..a6693ca 100644
  	if (page->mapping != inode->i_mapping) {
  		unlock_page(page);
 diff --git a/mm/fremap.c b/mm/fremap.c
-index 5bff081..246a9c7 100644
+index bbc4d66..7deee2c 100644
 --- a/mm/fremap.c
 +++ b/mm/fremap.c
-@@ -207,11 +207,12 @@ get_write_lock:
- 		 */
- 		if (mapping_cap_account_dirty(mapping)) {
- 			unsigned long addr;
--			struct file *file = get_file(vma->vm_file);
-+			struct file *file = vma->vm_file;
+@@ -211,7 +211,9 @@ get_write_lock:
+ 			/* mmap_region may free vma; grab the info now */
+ 			vm_flags = vma->vm_flags;
  
 +			vma_get_file(vma);
- 			addr = mmap_region(file, start, size,
- 					vma->vm_flags, pgoff);
--			fput(file);
+ 			addr = mmap_region(file, start, size, vm_flags, pgoff);
 +			vma_fput(vma);
+ 			fput(file);
  			if (IS_ERR_VALUE(addr)) {
  				err = addr;
- 			} else {
 diff --git a/mm/madvise.c b/mm/madvise.c
 index 539eeb9..5e700b1 100644
 --- a/mm/madvise.c
@@ -253,7 +248,7 @@ index 539eeb9..5e700b1 100644
  	return error;
  }
 diff --git a/mm/memory.c b/mm/memory.c
-index 5d9025f..3e3c5d5 100644
+index 6768ce9..22d2cec 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
 @@ -2752,7 +2752,7 @@ reuse:
