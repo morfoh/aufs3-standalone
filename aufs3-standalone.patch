@@ -113,7 +113,7 @@ index 923fe4a..176b435 100644
  static int fsnotify_mark_destroy(void *ignored)
  {
 diff --git a/fs/open.c b/fs/open.c
-index 4b3e1ed..ce49f2b 100644
+index b9ed8b2..3ea66972 100644
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -62,6 +62,7 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
@@ -181,7 +181,7 @@ index d3b6d2c..5076912 100644
  int devcgroup_inode_mknod(int mode, dev_t dev)
  {
 diff --git a/security/security.c b/security/security.c
-index 15b6928..ae6eba6 100644
+index 919cad9..f9e9e17 100644
 --- a/security/security.c
 +++ b/security/security.c
 @@ -407,6 +407,7 @@ int security_path_rmdir(struct path *dir, struct dentry *dentry)
