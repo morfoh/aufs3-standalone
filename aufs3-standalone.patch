@@ -1,4 +1,4 @@
-aufs3.x-rcN standalone patch
+aufs3.14 standalone patch
 
 diff --git a/fs/inode.c b/fs/inode.c
 index bc83168..6dd1207 100644
@@ -21,10 +21,10 @@ index bc83168..6dd1207 100644
  /**
   *	touch_atime	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 22e5367..6b1b43e 100644
+index 2ffc5a2..785a51f 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -425,6 +425,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
+@@ -455,6 +455,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
  	mnt_dec_writers(real_mount(mnt));
  	preempt_enable();
  }
@@ -32,7 +32,7 @@ index 22e5367..6b1b43e 100644
  
  /**
   * mnt_drop_write - give up write access to a mount
-@@ -1509,6 +1510,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -1555,6 +1556,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
